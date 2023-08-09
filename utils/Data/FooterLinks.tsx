@@ -1,23 +1,11 @@
 export const links = [
     {
-        name: "Home",
+        name: "Prices",
         href: "/",
     },
     {
-        name: "App",
+        name: "Other",
         href: "/app",
-    },
-    {
-        name: "Analytics",
-        href: "/app/analytics",
-    },
-    {
-        name: "Chat",
-        href: "/app/chat",
-    },
-    {
-        name: "Dashboard",
-        href: "/app/dashboard",
     },
 ];
 

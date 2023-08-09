@@ -3,13 +3,16 @@ import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { aggregatorV3InterfaceABI } from "@/utils/ContractAbis/AggregatorV3Abi";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import { capitalizeFirstLetter } from "@/utils/HelperFunctions/CapitalizeFirstLetter";
+import Image from "next/image";
 
 interface PriceFeedProps {
-    feed: string;
+    name: string;
+    symbol: string;
     contractAddress: string;
 }
 
-export default function PriceFeed({ feed, contractAddress }: PriceFeedProps) {
+export default function PriceFeed({ name, symbol, contractAddress }: PriceFeedProps) {
     const [price, setPrice] = useState("");
 
     const {
@@ -44,15 +47,24 @@ export default function PriceFeed({ feed, contractAddress }: PriceFeedProps) {
         }
     }, [data]);
 
-    return (
-        <div className="flex items-center justify-center mt-4 space-x-6">
-            {isContractReadLoading
-                ? "Loading..."
-                : parseFloat(price) < 1
-                ? `${feed}: $${formatPrice(price, 5)}`
-                : parseFloat(price) < 1000000000000
-                ? `${feed}: $${formatPrice(price, 2)}`
-                : `${feed}: $${formatPrice((parseFloat(price) / 1000000000000).toString(), 2)}T`}
+    return isContractReadLoading ? (
+        <div className="flex items-center justify-center mt-4 space-x-1 space-y-1">Loading...</div>
+    ) : (
+        <div className="flex items-center justify-center mt-4 space-x-1 space-y-1">
+            <div className="flex justify-center w-4/12"></div>
+            <div className="flex justify-center w-1/12">
+                <Image src={`/icons/tokens/${symbol}.svg`} alt={name} width={50} height={50} />
+            </div>
+            <div className="flex justify-center w-1/12 font-bold text-2xl">{symbol.toUpperCase()}</div>
+            <div className="flex justify-center w-1/12 font-semibold text-2xl">{capitalizeFirstLetter(name)}</div>
+            <div className="flex justify-center w-3/12 font-semibold text-2xl text-sky-300">
+                {parseFloat(price) < 1
+                    ? `$${formatPrice(price, 5)}`
+                    : parseFloat(price) < 1000000000000
+                    ? `$${formatPrice(price, 2)}`
+                    : `$${formatPrice((parseFloat(price) / 1000000000000).toString(), 2)}T`}
+            </div>
+            <div className="flex justify-center w-4/12"></div>
         </div>
     );
 }

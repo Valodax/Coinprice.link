@@ -9,7 +9,7 @@ export default function Footer() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="text-[1rem] font-medium text-gray-500 hover:text-blue-600 transition-colors ease-in-out duration-500"
+                        className="text-[1rem] font-medium text-gray-500 hover:text-blue-400 transition-colors ease-in-out duration-500"
                     >
                         {link.name}
                     </Link>
@@ -21,7 +21,7 @@ export default function Footer() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="text-[.8rem] font-medium text-gray-500 hover:text-blue-600 transition-colors ease-in-out duration-500"
+                        className="text-[.8rem] font-medium text-gray-500 hover:text-blue-400 transition-colors ease-in-out duration-500"
                     >
                         {link.name}
                     </Link>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Live Analytics", href: "/#data" },
+    { name: "Prices", href: "/" },
+    { name: "Data", href: "/#data" },
 ];
 
 export default function Header() {
@@ -13,7 +13,7 @@ export default function Header() {
                     <Link
                         key={name}
                         href={href}
-                        className="font-medium hover:text-sky-500 transition-colors ease-in-out duration-500"
+                        className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
                     >
                         {name}
                     </Link>
