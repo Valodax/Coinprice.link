@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const navLinks = [
     { name: "Prices", href: "/" },
-    { name: "Data", href: "/#data" },
+    { name: "Historical", href: "/historical" },
 ];
 
 export default function Header() {
