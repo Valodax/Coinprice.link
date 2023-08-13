@@ -4,8 +4,12 @@ export const links = [
         href: "/",
     },
     {
-        name: "Other",
-        href: "/app",
+        name: "NFTs",
+        href: "/nfts",
+    },
+    {
+        name: "Oracle Data",
+        href: "/historical",
     },
 ];
 

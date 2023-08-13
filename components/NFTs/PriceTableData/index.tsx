@@ -26,10 +26,10 @@ export default function PriceTableData({ name, symbol, contractAddress, ethPrice
                         <Image src={`/icons/nfts/${symbol}.avif`} alt={name} width={50} height={50} />
                     </div>
                 </div>
-                <div className="flex justify-start w-2/12 lg:w-1/12 font-semibold text-sm md:text-lg lg:text-xl">
+                <div className="flex justify-start w-3/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
                     {capitalizeFirstLetter(name)}
                 </div>
-                <div className="flex flex-col justify-center items-end w-3/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
+                <div className="flex flex-col justify-center items-end w-4/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
                     <div className="text-sky-300">
                         {!isLoading && !isNaN(parseFloat(price))
                             ? parseFloat(price) < 1

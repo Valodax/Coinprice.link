@@ -29,20 +29,15 @@ async function getPhaseStartAndEndDates(phaseId: bigint, priceFeed: any) {
 
 export default function HistoricalData() {
     const [price, setPrice] = useState("");
+    const [phaseId, setPhaseId] = useState(BigInt("1"));
+    const [aggregatorRoundId, setAggregatorRoundId] = useState(BigInt("1"));
     const [inputValue, setInputValue] = useState<number | "">("");
     const [historicalData, setHistoricalData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
-    const stopLoop = useRef(false);
-    const [showStopButton, setShowStopButton] = useState(false);
-    const [currentRoundInfo, setCurrentRoundInfo] = useState({
-        phaseId: BigInt("1"),
-        aggregatorRoundId: BigInt("1"),
-        startedAt: "",
-        updatedAt: "",
-    });
+    const stopLoop = useRef(true);
 
-    async function getPhaseRoundDataBeginning(priceFeed: any, _phaseId: bigint) {
+    async function getPhaseRoundDataBeginning(phaseId: bigint, priceFeed: any) {
         let round = BigInt("1");
         let roundsData = [];
 
@@ -50,48 +45,88 @@ export default function HistoricalData() {
             if (stopLoop.current) {
                 break;
             }
-            let roundId = (_phaseId << BigInt(64)) | round;
+            let roundId = (phaseId << BigInt(64)) | round;
             try {
-                console.log("round", round.toString());
-                console.log("phaseId:", _phaseId.toString());
-                console.log("roundId:", roundId.toString());
+                console.log("phaseId:", Number(phaseId));
                 const data = await priceFeed.call("getRoundData", [String(roundId)]);
                 const roundUpdate = toDate(data.updatedAt);
                 const roundData = { timestamp: roundUpdate, price: ethers.utils.formatUnits(data.answer, 8) };
-                roundsData.push(roundData); // Store the fetched round data
-                round++;
                 console.log(roundData);
+
+                roundsData.push(roundData); // Store the fetched round data
+
+                round++;
             } catch (error) {
                 console.error(`Failed to fetch data for round ${round}: `, error);
                 break; // Stop the loop if we fail to fetch data for a round
             }
         }
-        // Return the last round id and the fetched rounds data
-        return { lastRoundId: round - BigInt("1"), roundsData };
+
+        return { lastRoundId: round - BigInt("1"), roundsData }; // Return the last round id and the fetched rounds data
     }
 
-    async function loopAllData(priceFeedContract: any) {
-        let historicalData: any = [];
-        let currentPhaseId = currentRoundInfo.phaseId;
-        let currentAggregatorRoundId = currentRoundInfo.aggregatorRoundId;
+    async function getPhaseRoundDataEnding(phaseId: bigint, priceFeed: any, lastRoundId: bigint) {
+        let roundsData = [];
 
-        // From beginning
-        for (let _phaseId = BigInt("1"); _phaseId <= currentPhaseId; _phaseId++) {
+        for (let round = lastRoundId; round >= BigInt("1"); round--) {
             if (stopLoop.current) {
                 break;
             }
-            console.log("current phase id", Number(_phaseId));
+            let roundId = (phaseId << BigInt(64)) | round;
+            try {
+                console.log("phaseId:", Number(phaseId));
+                const data = await priceFeed.call("getRoundData", [String(roundId)]);
+                const roundUpdate = toDate(data.updatedAt);
+                const roundData = { timestamp: roundUpdate, price: ethers.utils.formatUnits(data.answer, 8) };
+                console.log(roundData);
 
-            // Get the last round of this phase
-            let { lastRoundId, roundsData } =
-                _phaseId === currentPhaseId
-                    ? { lastRoundId: currentAggregatorRoundId, roundsData: [] }
-                    : await getPhaseRoundDataBeginning(priceFeedContract, _phaseId);
+                roundsData.unshift(roundData); // Store the fetched round data at the beginning of the array
+            } catch (error) {
+                console.error(`Failed to fetch data for round ${round}: `, error);
+                break; // Stop the loop if we fail to fetch data for a round
+            }
+        }
 
-            console.log("this aggregator's final round id", Number(lastRoundId));
+        return { lastRoundId: BigInt("1"), roundsData }; // Return the last round id and the fetched rounds data
+    }
 
-            // Append the fetched rounds data to historicalData
-            historicalData = [...historicalData, ...roundsData]; // Add the fetched rounds data to historicalData
+    async function loopAllData(
+        currentPhaseId: bigint,
+        currentAggregatorRoundId: bigint,
+        priceFeed: any,
+        fromEnding: boolean = false
+    ) {
+        let historicalData: any = [];
+
+        if (!fromEnding) {
+            for (let phaseId = BigInt("1"); phaseId <= currentPhaseId; phaseId++) {
+                if (stopLoop.current) {
+                    break;
+                }
+                console.log("current phase id", Number(phaseId));
+                let { lastRoundId, roundsData } =
+                    phaseId === currentPhaseId
+                        ? { lastRoundId: currentAggregatorRoundId, roundsData: [] }
+                        : await getPhaseRoundDataBeginning(phaseId, priceFeed);
+
+                console.log("current aggregator round id", Number(lastRoundId));
+
+                historicalData = [...historicalData, ...roundsData]; // Add the fetched rounds data to historicalData
+            }
+        } else {
+            for (let phaseId = currentPhaseId; phaseId >= BigInt("1"); phaseId--) {
+                if (stopLoop.current) {
+                    break;
+                }
+                console.log("current phase id", Number(phaseId));
+
+                let lastRoundId = phaseId === currentPhaseId ? currentAggregatorRoundId : BigInt("0xFFFFFFFFFFFFFFFF");
+                let roundsData = await getPhaseRoundDataEnding(phaseId, priceFeed, lastRoundId);
+
+                console.log("current aggregator round id", Number(lastRoundId));
+
+                historicalData = [...roundsData.roundsData, ...historicalData]; // Prepend the fetched rounds data to historicalData
+            }
         }
 
         return historicalData;
@@ -108,14 +143,11 @@ export default function HistoricalData() {
         alert(`Submitted number is: ${inputValue}`);
     }
 
-    const token = CryptoCurrencyFeeds.aave;
-
-    async function fetchHistoricalData() {
+    async function fetchHistoricalData(loopFromEnding: boolean) {
         stopLoop.current = false;
-        setShowStopButton(true);
         const sdk = new ThirdwebSDK("ethereum");
-        const contract = await sdk.getContract(token.address, aggregatorV3InterfaceABI);
-        const data = await loopAllData(contract);
+        const contract = await sdk.getContract(CryptoCurrencyFeeds.eth.address, aggregatorV3InterfaceABI);
+        const data = await loopAllData(phaseId, aggregatorRoundId, contract, loopFromEnding);
         setHistoricalData(data);
     }
 
@@ -123,7 +155,7 @@ export default function HistoricalData() {
         contract: priceFeed,
         isLoading: isContractLoading,
         error: contractError,
-    } = useContract(token.address, aggregatorV3InterfaceABI);
+    } = useContract(CryptoCurrencyFeeds.eth.address, aggregatorV3InterfaceABI);
 
     const {
         data,
@@ -144,46 +176,41 @@ export default function HistoricalData() {
             console.log("Price last updated:", updatedAt);
             const phaseId = BigInt(data.roundId) >> BigInt(64);
             const aggregatorRoundId = BigInt(data.roundId) & BigInt("0xFFFFFFFFFFFFFFFF");
-            setCurrentRoundInfo({
-                phaseId: phaseId,
-                aggregatorRoundId: aggregatorRoundId,
-                startedAt: startedAt.toString(),
-                updatedAt: updatedAt.toString(),
-            });
+            setPhaseId(phaseId);
+            setAggregatorRoundId(aggregatorRoundId);
         }
     }, [data, isContractLoading, isContractReadLoading, contractError, contractReadError]);
 
     return (
         <div className="p-10">
             <div className="flex flex-col gap-10 items-center justify-center">
-                <div>Current Phase Id: {currentRoundInfo.phaseId.toString()}</div>
-                <div>Current Aggregator Round Id: {currentRoundInfo.aggregatorRoundId.toString()}</div>
-                <div>Round Started At: {currentRoundInfo.startedAt}</div>
-                <div>Most Recent Price Update At: {currentRoundInfo.updatedAt}</div>
-                <div>
-                    {token.name.toUpperCase()} / USD Price: {price}
-                </div>
+                <div>Ethereum / USD Price: {price}</div>
+                <div>Current Phase Id: {Number(phaseId)}</div>
+                <div>Current Aggregator Round Id: {Number(aggregatorRoundId)}</div>
                 <div className="flex flex-col gap-3">
-                    {!showStopButton ? (
-                        <div className="flex gap-5">
-                            <button
-                                className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
-                                onClick={fetchHistoricalData}
-                            >
-                                Get Price Data From Beginning
-                            </button>
-                        </div>
-                    ) : (
-                        ""
-                    )}
-                    {showStopButton ? (
+                    <div className="flex gap-5">
+                        <button
+                            className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
+                            onClick={() => {
+                                fetchHistoricalData(false);
+                            }}
+                        >
+                            Get Price Data From Beginning
+                        </button>
+                        <button
+                            className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
+                            onClick={() => {
+                                fetchHistoricalData(true);
+                            }}
+                        >
+                            Get Price Data From Ending
+                        </button>
+                    </div>
+                    {stopLoop.current === false ? (
                         <div className="flex justify-center">
                             <button
                                 className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
-                                onClick={() => {
-                                    stopLoop.current = true;
-                                    setShowStopButton(false);
-                                }}
+                                onClick={() => (stopLoop.current = true)}
                             >
                                 Stop Fetching
                             </button>
@@ -192,19 +219,18 @@ export default function HistoricalData() {
                         ""
                     )}
                 </div>
-                <div className="flex gap-5">
-                    Get Price Data Starting from phase:
+                <div className="flex">
                     <form onSubmit={handleSubmit}>
                         <input
-                            className="text-black w-15"
+                            className="text-black w-20"
                             type="number"
                             min={1}
-                            max={Number(currentRoundInfo.phaseId)}
+                            max={Number(phaseId)}
                             value={inputValue}
                             onChange={handleChange}
-                        />
+                        />{" "}
                         <button
-                            className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500 pl-5"
+                            className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500 pl-10"
                             type="submit"
                         >
                             Submit
