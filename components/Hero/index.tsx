@@ -7,9 +7,9 @@ export default function Hero() {
     const marketCapFeed = SpecialFeeds["Total Market Cap"];
     const { price, isLoading, error } = useContractCustomUsd(marketCapFeed);
     return (
-        <section className="flex flex-col justify-center items-center w-full min-h-[20vh]">
-            <h1 className="text-3xl font-bold pb-5">Cryptocurrency Prices</h1>
-            <h2 className="text-l">
+        <section className="flex flex-col justify-center pb-5 items-center w-full min-h-[20vh]">
+            <h1 className="text-2xl md:text-4xl font-bold pb-3">Cryptocurrency Prices</h1>
+            <h2 className="text-base md:text-xl">
                 Total Crypto Market Cap:{" "}
                 <span className="text-sky-300">
                     {!isLoading && price
