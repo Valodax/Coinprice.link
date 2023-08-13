@@ -13,6 +13,25 @@ export const CryptoCurrencyFeeds = {
     ltc: { name: "litecoin", address: "0x6af09df7563c363b5763b9102712ebed3b9e859b" },
 };
 
+export const CryptoNFTFeeds = {
+    azuki: { name: "Azuki", address: "0xa8b9a447c73191744d5b79bce864f343455e1150" },
+    "bored-ape-yacht-club": { name: "Bored Ape Yacht Club", address: "0x352f2bc3039429fc2fe62004a1575ae74001cfce" },
+    "clone-x": { name: "Clone X", address: "0x021264d59dabd26e7506ee7278407891bb8cdccc" },
+    "cool-cats": { name: "Cool Cats", address: "0xf49f8f5b931b0e4b4246e4cca7cd2083997aa83d" },
+    cryptoadz: { name: "Cryptoadz", address: "0xfaa8f6073845dbe5627daa3208f78a3043f99bca" },
+    cryptopunks: { name: "Cryptopunks", address: "0x01b6710b01cf3dd8ae64243097d91afb03728fdd" },
+    doodles: { name: "Doodles", address: "0x027828052840a43cc2d0187bcfa6e3d6ace60336" },
+    "mutant-ape-yacht-club": { name: "Mutant Ape Yacht Club", address: "0x1823c89715fe3fb96a24d11c917aca918894a090" },
+    "vee-friends": { name: "Vee Friends", address: "0x35bf6767577091e7f04707c0290b3f889e968307" },
+    "beanz-official": { name: "BEANZ OFFICIAL", address: "0xa97477ab5ab6ed2f6a2b5cbe59d71e88ad334b90" },
+    moonbirds: { name: "MOONBIRDS", address: "0x9cd36e0e8d3c27d630d00406acfc3463154951af" },
+    "otherdeed-for-otherside": {
+        name: "OTHERDEED FOR OTHERSIDE",
+        address: "0x6e3a4376b4c8d3ba49602f8542d9d3c4a87ba901",
+    },
+    "pudgy-penguins": { name: "PUDGY PENGUINS", address: "0x9f2ba149c2a0ee76043d83558c4e79e9f3e5731b" },
+};
+
 export const SpecialFeeds = {
     "Total Market Cap": "0xec8761a0a73c34329ca5b1d3dc7ed07f30e836e2",
 };

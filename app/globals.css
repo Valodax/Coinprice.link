@@ -22,3 +22,17 @@ body {
     overflow-y: scroll; /* Show scrollbar even if no scrolling is needed */
     padding-right: calc(100vw - 100%); /* Place to "hide" the body scrollbar */
 }
+
+::-webkit-scrollbar {
+    width: 10px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #000000; /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888888; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid #000000; /* creates padding around scroll thumb */
+}

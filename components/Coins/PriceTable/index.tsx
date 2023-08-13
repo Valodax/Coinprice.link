@@ -1,5 +1,5 @@
 import { CryptoCurrencyFeeds } from "@/utils/ContractRepository/Ethereum/Contracts";
-import PriceTableData from "@/components/PriceTableData";
+import PriceTableData from "@/components/Coins/PriceTableData";
 
 export default function PriceTable() {
     return (
