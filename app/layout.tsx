@@ -10,7 +10,7 @@ import ContextProvider from "@/components/ContextProvider"; // All context provi
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Chainlink Historical PriceFeed Website",
+    title: "CoinPrice.LINK",
     description: "A Website to view current and historical price data from Chainlink PriceFeeds",
 };
 
