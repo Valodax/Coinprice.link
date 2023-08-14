@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { PriceContext } from "@/context/PriceContext";
 import { capitalizeFirstLetter } from "@/utils/HelperFunctions/CapitalizeFirstLetter";
 import { formatPrice } from "@/utils/HelperFunctions/FormatPrice";
