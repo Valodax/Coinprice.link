@@ -30,3 +30,7 @@ body {
     border-radius: 20px; /* roundness of the scroll thumb */
     border: 3px solid #000000; /* creates padding around scroll thumb */
 }
+
+.text-transition-color {
+    transition: color 3s linear;
+}

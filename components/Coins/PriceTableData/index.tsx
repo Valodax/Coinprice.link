@@ -31,7 +31,15 @@ export default function PriceTableData({ name, symbol }: PriceTableDataProps) {
                 <div className="flex justify-start w-2/12 lg:w-1/12 font-semibold text-sm md:text-lg lg:text-xl">
                     {capitalizeFirstLetter(name)}
                 </div>
-                <div className="flex justify-end w-3/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl text-sky-300">
+                <div
+                    className={`flex justify-end w-3/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl ${
+                        prices[symbol] && !prices[symbol].isPercentageLoading
+                            ? prices[symbol].percentage! < 0
+                                ? "text-red-400 transition-colors duration-[5000ms]"
+                                : "text-green-400 transition-colors duration-[5000ms]"
+                            : "text-sky-300"
+                    }`}
+                >
                     {prices[symbol] && !prices[symbol].isLoading && !isNaN(parseFloat(prices[symbol].price)) ? (
                         parseFloat(prices[symbol].price) < 1 ? (
                             `$${formatPrice(prices[symbol].price, 5)}`
@@ -43,10 +51,12 @@ export default function PriceTableData({ name, symbol }: PriceTableDataProps) {
                     )}
                 </div>
                 <div
-                    className={`flex justify-end w-2/12 lg:w-1/12 font-semibold text-sm md:text-lg lg:text-xl text-sky-300 ${
-                        prices[symbol] && !prices[symbol].isPercentageLoading && prices[symbol].percentage! < 0
-                            ? "text-red-400"
-                            : "text-green-400"
+                    className={`flex justify-end w-2/12 lg:w-1/12 font-semibold text-sm md:text-lg lg:text-xl ${
+                        prices[symbol] && !prices[symbol].isPercentageLoading
+                            ? prices[symbol].percentage! < 0
+                                ? "text-red-400 transition-colors duration-[5000ms]"
+                                : "text-green-400 transition-colors duration-[5000ms]"
+                            : "text-sky-300"
                     }`}
                 >
                     {prices[symbol] && !prices[symbol].isPercentageLoading && prices[symbol].percentage ? (
