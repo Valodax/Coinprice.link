@@ -5,6 +5,7 @@ import Web3Provider from "@/components/ThirdWebProvider";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
+import ContextProvider from "@/components/ContextProvider"; // All context providers are wrapped here
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className={inter.className}>
                 <Header />
                 <Web3Provider>
-                    <Hero />
-                    {children}
+                    <ContextProvider>
+                        <Hero />
+                        {children}
+                    </ContextProvider>
                 </Web3Provider>
                 <Footer />
             </body>

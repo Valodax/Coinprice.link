@@ -2,24 +2,8 @@
 
 import { CryptoNFTFeeds } from "@/utils/ContractRepository/Ethereum/Contracts";
 import PriceTableData from "@/components/NFTs/PriceTableData";
-import { useContractCustomUsd } from "@/utils/Hooks/useContractCustomUsd";
-import { CryptoCurrencyFeeds } from "@/utils/ContractRepository/Ethereum/Contracts";
-import { useState, useEffect } from "react";
 
 export default function PriceTable() {
-    const [floatEthPrice, setFloatEthPrice] = useState(0);
-    const {
-        price: ethPrice,
-        isLoading: ethIsLoading,
-        error: ethError,
-    } = useContractCustomUsd(CryptoCurrencyFeeds.eth.address);
-
-    useEffect(() => {
-        if (ethPrice) {
-            setFloatEthPrice(parseFloat(ethPrice));
-        }
-    }, [ethPrice]);
-
     return (
         <div>
             <div className="flex items-center justify-center lg:gap-10">
@@ -30,13 +14,7 @@ export default function PriceTable() {
                 </div>
             </div>
             {Object.entries(CryptoNFTFeeds).map(([symbol, { name, address }]) => (
-                <PriceTableData
-                    key={symbol}
-                    name={name}
-                    symbol={symbol}
-                    contractAddress={address}
-                    ethPrice={floatEthPrice}
-                />
+                <PriceTableData key={symbol} name={name} symbol={symbol} contractAddress={address} />
             ))}
         </div>
     );

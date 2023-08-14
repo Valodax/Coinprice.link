@@ -93,7 +93,6 @@ export default function HistoricalData() {
             // Append the fetched rounds data to historicalData
             historicalData = [...historicalData, ...roundsData]; // Add the fetched rounds data to historicalData
         }
-
         return historicalData;
     }
 

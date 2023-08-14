@@ -3,17 +3,20 @@
 import { capitalizeFirstLetter } from "@/utils/HelperFunctions/CapitalizeFirstLetter";
 import { formatPrice } from "@/utils/HelperFunctions/FormatPrice";
 import { useContractCustomEth } from "@/utils/Hooks/useContractCustomEth";
+import { PriceContext } from "@/context/PriceContext";
+import { useContext } from "react";
+import { ScaleLoader } from "react-spinners";
 import Image from "next/image";
 
 interface PriceTableDataProps {
     name: string;
     symbol: string;
     contractAddress: string;
-    ethPrice: number;
 }
 
-export default function PriceTableData({ name, symbol, contractAddress, ethPrice }: PriceTableDataProps) {
+export default function PriceTableData({ name, symbol, contractAddress }: PriceTableDataProps) {
     const { price, isLoading, error } = useContractCustomEth(contractAddress);
+    const { ethereumPrice } = useContext(PriceContext);
 
     return (
         <div>
@@ -31,18 +34,26 @@ export default function PriceTableData({ name, symbol, contractAddress, ethPrice
                 </div>
                 <div className="flex flex-col justify-center items-end w-4/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
                     <div className="text-sky-300">
-                        {!isLoading && !isNaN(parseFloat(price))
-                            ? parseFloat(price) < 1
-                                ? `${formatPrice(parseFloat(price), 5)} ETH`
-                                : `${formatPrice(parseFloat(price), 2)} ETH`
-                            : "Loading..."}
+                        {!isLoading && !isNaN(parseFloat(price)) ? (
+                            parseFloat(price) < 1 ? (
+                                `${formatPrice(parseFloat(price), 5)} ETH`
+                            ) : (
+                                `${formatPrice(parseFloat(price), 2)} ETH`
+                            )
+                        ) : (
+                            <ScaleLoader height={25} width={2} loading={true} color={"rgb(125 211 252)"} />
+                        )}
                     </div>
                     <div className="text-sky-200">
-                        {!isLoading && !isNaN(parseFloat(price))
-                            ? parseFloat(price) * ethPrice < 1
-                                ? `$${formatPrice(parseFloat(price) * ethPrice, 5)}`
-                                : `$${formatPrice(parseFloat(price) * ethPrice, 2)}`
-                            : "Loading..."}
+                        {!isLoading && !isNaN(parseFloat(price)) ? (
+                            parseFloat(price) * ethereumPrice < 1 ? (
+                                `$${formatPrice(parseFloat(price) * ethereumPrice, 5)}`
+                            ) : (
+                                `$${formatPrice(parseFloat(price) * ethereumPrice, 2)}`
+                            )
+                        ) : (
+                            <ScaleLoader height={25} width={2} loading={true} color={"rgb(186 230 253)"} />
+                        )}
                     </div>
                 </div>
             </div>
