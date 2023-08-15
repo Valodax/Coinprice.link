@@ -3,6 +3,7 @@ import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { aggregatorV3InterfaceABI } from "@/utils/ContractAbis/AggregatorV3Abi";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import { toDate } from "@/utils/HelperFunctions/toDate";
 
 export const useContractCustomUsd = (contractAddress: string) => {
     const [price, setPrice] = useState("");
@@ -16,6 +17,7 @@ export const useContractCustomUsd = (contractAddress: string) => {
         return "";
     });
     const [percentage, setPercentage] = useState<number | null>(0);
+    const [updateTime, setUpdateTime] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [isPercentageLoading, setIsPercentageLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -49,6 +51,7 @@ export const useContractCustomUsd = (contractAddress: string) => {
 
             if (newPrice !== prevPrice) {
                 setPrice(newPrice);
+                setUpdateTime(toDate(data.updatedAt).toString());
                 console.log("running calculate change");
                 calculateChange(data);
                 setPrevPrice(newPrice);
@@ -79,5 +82,5 @@ export const useContractCustomUsd = (contractAddress: string) => {
         );
     }, [data, isContractLoading, isContractReadLoading, contractError, contractReadError]);
 
-    return { price, percentage, isLoading, isPercentageLoading, error };
+    return { price, percentage, updateTime, isLoading, isPercentageLoading, error };
 };

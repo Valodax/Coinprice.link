@@ -18,14 +18,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body className={inter.className}>
-                <Header />
                 <Web3Provider>
                     <ContextProvider>
+                        <Header />
                         <Hero />
                         {children}
+                        <Footer />
                     </ContextProvider>
                 </Web3Provider>
-                <Footer />
             </body>
         </html>
     );

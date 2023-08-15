@@ -8,16 +8,18 @@ export const PriceItem: React.FC<{
     updatePrices: (
         coin: string,
         price: string,
+        updateTime: string,
         percentage: number | null,
         isLoading: boolean,
         isPercentageLoading: boolean
     ) => void;
 }> = ({ contractAddress, coin, updatePrices }) => {
-    const { price, percentage, isLoading, isPercentageLoading, error } = useContractCustomUsd(contractAddress);
+    const { price, percentage, updateTime, isLoading, isPercentageLoading, error } =
+        useContractCustomUsd(contractAddress);
 
     useEffect(() => {
         if (price) {
-            updatePrices(coin, price, percentage, isLoading, isPercentageLoading);
+            updatePrices(coin, price, updateTime, percentage, isLoading, isPercentageLoading);
         }
         if (error) {
             console.log(error);
