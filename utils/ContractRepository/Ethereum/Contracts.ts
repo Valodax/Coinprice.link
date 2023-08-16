@@ -33,18 +33,18 @@ export const CryptoNFTFeeds = {
 };
 
 export const CryptoFiatFeeds = {
-    EUR: { name: "Euro", address: "0xb49f677943bc038e9857d61e7d053caa2c1734c1" },
-    AUD: { name: "Australian Dollar", address: "0x77f9710e7d0a19669a13c055f62cd80d313df022" },
-    CAD: { name: "Canadian Dollar", address: "0xa34317db73e77d453b1b8d04550c44d10e981c8e" },
-    CHF: { name: "Swiss Franc", address: "0x449d117117838ffa61263b61da6301aa2a88b13a" },
-    GBP: { name: "Great British Pound", address: "0x5c0ab2d9b5a7ed9f470386e82bb36a3613cdd4b5" },
-    JPY: { name: "Japanese Yen", address: "0xbce206cae7f0ec07b545edde332a47c2f75bbeb3" },
-    CNY: { name: "Chinese Yuan", address: "0xef8a4af35cd47424672e3c590abd37fbb7a7759a" },
-    KRW: { name: "Korean Won", address: "0x01435677fb11763550905594a16b645847c1d0f3" },
-    NZD: { name: "New Zealand Dollar", address: "0x3977cfc9e4f29c184d4675f4eb8e0013236e5f3e" },
-    BRL: { name: "Brazilian Real", address: "0x971e8f1b779a5f1c36e1cd7ef44ba1cc2f5eee0f" },
-    SGD: { name: "Singapore Dollar", address: "0xe25277ff4bbf9081c75ab0eb13b4a13a721f3e13" },
-    TRY: { name: "Turkish Lira", address: "0xb09fc5fd3f11cf9eb5e1c5dba43114e3c9f477b5" },
+    eur: { name: "Euro", address: "0xb49f677943bc038e9857d61e7d053caa2c1734c1" },
+    aud: { name: "Australian Dollar", address: "0x77f9710e7d0a19669a13c055f62cd80d313df022" },
+    cad: { name: "Canadian Dollar", address: "0xa34317db73e77d453b1b8d04550c44d10e981c8e" },
+    chf: { name: "Swiss Franc", address: "0x449d117117838ffa61263b61da6301aa2a88b13a" },
+    gbp: { name: "Great British Pound", address: "0x5c0ab2d9b5a7ed9f470386e82bb36a3613cdd4b5" },
+    jpy: { name: "Japanese Yen", address: "0xbce206cae7f0ec07b545edde332a47c2f75bbeb3" },
+    cny: { name: "Chinese Yuan", address: "0xef8a4af35cd47424672e3c590abd37fbb7a7759a" },
+    krw: { name: "Korean Won", address: "0x01435677fb11763550905594a16b645847c1d0f3" },
+    nzd: { name: "New Zealand Dollar", address: "0x3977cfc9e4f29c184d4675f4eb8e0013236e5f3e" },
+    brl: { name: "Brazilian Real", address: "0x971e8f1b779a5f1c36e1cd7ef44ba1cc2f5eee0f" },
+    sgd: { name: "Singapore Dollar", address: "0xe25277ff4bbf9081c75ab0eb13b4a13a721f3e13" },
+    try: { name: "Turkish Lira", address: "0xb09fc5fd3f11cf9eb5e1c5dba43114e3c9f477b5" },
 };
 
 export const CommodityFeeds = {

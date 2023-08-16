@@ -8,7 +8,7 @@ export default function PriceTable() {
         <div>
             <div className="flex items-center justify-center">
                 <div className="flex items-center justify-start w-4/12 md:w-2/12 lg:w-2/12 text-sm md:text-lg lg:text-xl">
-                    Coin Identifier
+                    NFT Name
                 </div>
                 <div className="flex items-center justify-end w-5.5/12 lg:w-3/12 text-sm md:text-lg lg:text-xl">
                     Floor Price (USD)
