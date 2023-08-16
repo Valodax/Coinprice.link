@@ -18,14 +18,10 @@ export default function PriceTableData({ name, symbol, contractAddress }: PriceT
     const { price, isLoading, error } = useContractCustomEth(contractAddress);
     const { ethereumPrice } = useContext(PriceContext);
 
-    const handleRowClick = (symbol: string) => {
-        console.log("symbol", symbol);
-    };
-
     return (
         <div>
-            <div className="flex items-center justify-center mt-4 py-5">
-                <div className="flex justify-start w-1.5/12 md:w-0.5/12 lg:w-1/12 xl:w-0.5/12 items-center gap-x-7">
+            <div className="flex items-center justify-center mt-4 py-5 lg:gap-10">
+                <div className="flex justify-start w-2/12 lg:w-1/12">
                     <div className="lg:hidden">
                         <Image src={`/icons/nfts/${symbol}.avif`} alt={name} width={30} height={30} />
                     </div>
@@ -33,15 +29,10 @@ export default function PriceTableData({ name, symbol, contractAddress }: PriceT
                         <Image src={`/icons/nfts/${symbol}.avif`} alt={name} width={50} height={50} />
                     </div>
                 </div>
-                <button
-                    onClick={handleRowClick.bind(null, symbol)}
-                    className="flex justify-start w-4/12 sm:w-2/12 lg:w-2/12 hover:text-sky-500 transition-colors duration-500 md:text-lg lg:text-xl"
-                >
-                    <span className="pl-3 text-start font-semibold text-md md:text-lg lg:text-xl">
-                        {capitalizeFirstLetter(name)}
-                    </span>
-                </button>
-                <div className="flex flex-col justify-center items-end w-4/12 sm:w-6/12 md:w-5/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
+                <div className="flex justify-start w-3/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
+                    {capitalizeFirstLetter(name)}
+                </div>
+                <div className="flex flex-col justify-center items-end w-4/12 lg:w-2/12 font-semibold text-sm md:text-lg lg:text-xl">
                     <div className="text-sky-300">
                         {!isLoading && !isNaN(parseFloat(price)) ? (
                             parseFloat(price) < 1 ? (

@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
-    { name: "Coin Prices", href: "/" },
-    { name: "NFT Prices", href: "/nfts" },
+    { name: "Coins", href: "/" },
+    { name: "NFTs", href: "/nfts" },
+    { name: "Fiat", href: "/fiat" },
     { name: "Oracle Data", href: "/historical" },
 ];
 

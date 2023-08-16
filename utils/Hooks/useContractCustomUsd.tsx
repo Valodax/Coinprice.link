@@ -47,7 +47,6 @@ export const useContractCustomUsd = (contractAddress: string) => {
     useEffect(() => {
         if (data) {
             let newPrice = ethers.utils.formatUnits(data.answer, 8);
-            console.log(newPrice, prevPrice);
 
             if (newPrice !== prevPrice) {
                 setPrice(newPrice);

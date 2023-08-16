@@ -41,6 +41,7 @@ export default function HistoricalData() {
         startedAt: "",
         updatedAt: "",
     });
+    const [jsonUrl, setJsonUrl] = useState("");
 
     async function getPhaseRoundDataBeginning(priceFeed: any, _phaseId: bigint) {
         let round = BigInt("1");
@@ -60,7 +61,6 @@ export default function HistoricalData() {
                 const roundData = { timestamp: roundUpdate, price: ethers.utils.formatUnits(data.answer, 8) };
                 roundsData.push(roundData); // Store the fetched round data
                 round++;
-                console.log(roundData);
             } catch (error) {
                 console.error(`Failed to fetch data for round ${round}: `, error);
                 break; // Stop the loop if we fail to fetch data for a round
@@ -152,6 +152,15 @@ export default function HistoricalData() {
         }
     }, [data, isContractLoading, isContractReadLoading, contractError, contractReadError]);
 
+    async function checkFeedRepository() {
+        const response = await fetch(process.env.NEXT_PUBLIC_URL + "/api/etherscan/feeds");
+        const data = await response.json();
+        console.log("here's the response", data);
+        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        setJsonUrl(url);
+    }
+
     return (
         <div className="p-10">
             <div className="flex flex-col gap-10 items-center justify-center">
@@ -209,6 +218,25 @@ export default function HistoricalData() {
                             Submit
                         </button>
                     </form>
+                </div>
+                <div>
+                    {!jsonUrl ? (
+                        <button
+                            className="font-medium hover:text-blue-400 transition-colors ease-in-out duration-500"
+                            onClick={checkFeedRepository}
+                        >
+                            {" "}
+                            Get All Confirmed Price Feed Data
+                        </button>
+                    ) : (
+                        <div className="flex justify-center font-medium hover:text-blue-400 transition-colors ease-in-out duration-500">
+                            {jsonUrl && (
+                                <a href={jsonUrl} download="data.json">
+                                    Download Etherscan JSON
+                                </a>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

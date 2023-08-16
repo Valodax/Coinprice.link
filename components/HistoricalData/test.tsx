@@ -51,7 +51,6 @@ export default function HistoricalData() {
                 const data = await priceFeed.call("getRoundData", [String(roundId)]);
                 const roundUpdate = toDate(data.updatedAt);
                 const roundData = { timestamp: roundUpdate, price: ethers.utils.formatUnits(data.answer, 8) };
-                console.log(roundData);
 
                 roundsData.push(roundData); // Store the fetched round data
 
@@ -78,7 +77,6 @@ export default function HistoricalData() {
                 const data = await priceFeed.call("getRoundData", [String(roundId)]);
                 const roundUpdate = toDate(data.updatedAt);
                 const roundData = { timestamp: roundUpdate, price: ethers.utils.formatUnits(data.answer, 8) };
-                console.log(roundData);
 
                 roundsData.unshift(roundData); // Store the fetched round data at the beginning of the array
             } catch (error) {
