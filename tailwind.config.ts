@@ -21,6 +21,9 @@ const config: Config = {
                 "4.5/12": "37.5%",
                 "5.5/12": "45.833333%",
             },
+            boxShadow: {
+                white: '0 0 5px #fff'
+            }
         },
     },
     plugins: [],

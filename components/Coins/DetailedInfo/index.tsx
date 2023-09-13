@@ -1,21 +1,28 @@
 "use client";
 import { useContext } from "react";
 import { PriceContext } from "@/context/PriceContext";
-import { CryptoCurrencyFeeds } from "@/utils/ContractRepository/Ethereum/Contracts";
 
 export default function DetailedInfo() {
-    const { selectedRow, prices } = useContext(PriceContext);
+  const { selectedRow, coinPriceFeeds } = useContext(PriceContext);
 
-    const feed = CryptoCurrencyFeeds[selectedRow as keyof typeof CryptoCurrencyFeeds];
+  const selectedPriceFeed = coinPriceFeeds[selectedRow];
 
-    return (
-        <div>
-            <div className="flex items-center justify-center">
-                Price Feed Contract Address: {feed ? feed.address : "Address not found"}
-            </div>
-            <div className="flex items-center justify-center">
-                Time Last Updated: {prices[selectedRow] ? prices[selectedRow].updateTime : "Time not found"}
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div>Price Feed Contract Address: {selectedPriceFeed ? selectedPriceFeed.id : "Address not found"}</div>
+      <div>Asset Contract Address: {selectedPriceFeed ? selectedPriceFeed.assetAddress : "Address not found"}</div>
+      <div>
+        Time Last Updated:{" "}
+        {selectedPriceFeed
+          ? new Date(parseFloat(selectedPriceFeed.timeLastUpdated) * 1000).toLocaleString()
+          : "Time not found"}
+      </div>
+      <div>
+        Number of price updates in 24h Period: {selectedPriceFeed ? selectedPriceFeed.priceUpdates24h : "No Updates"}
+      </div>
+      <div>
+        Number of price updates in 7d Period: {selectedPriceFeed ? selectedPriceFeed.priceUpdates7d : "No Updates"}
+      </div>
+    </div>
+  );
 }
