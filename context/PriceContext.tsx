@@ -32,6 +32,7 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isPercentageLoading, setIsPercentageLoading] = useState<boolean>(true);
   const hasCalculatedPercentage = useRef(false);
+  const [isSending, setIsSending] = useState<boolean>(true);
 
   const calculatePercentage = (coinPriceFeeds: { [name: string]: DataFeed }) => {
     const priceFeedsWithPercentage: { [key: string]: DataFeed } = {};
