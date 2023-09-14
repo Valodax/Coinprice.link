@@ -9,7 +9,6 @@ export async function Get24HourPriceChangePercentage(priceFeed: any, phaseId: bi
 
   // Decrement roundId and fetch round data until you find data that is just over 24 hours old
   while (true) {
-    console.log("roundId", roundId);
     roundId--;
     let data = await priceFeed.call("getRoundData", [String(roundId)]);
     let roundUpdate = toDate(data.updatedAt);

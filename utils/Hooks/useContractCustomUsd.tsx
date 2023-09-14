@@ -6,80 +6,73 @@ import { ethers } from "ethers";
 import { toDate } from "@/utils/HelperFunctions/toDate";
 
 export const useContractCustomUsd = (contractAddress: string) => {
-    const [price, setPrice] = useState("");
-    const [prevPrice, setPrevPrice] = useState(() => {
+  const [price, setPrice] = useState("");
+  const [prevPrice, setPrevPrice] = useState(() => {
+    if (typeof window !== "undefined") {
+      const prevPrice = localStorage.getItem("prevPrice");
+      if (prevPrice) {
+        return parseFloat(prevPrice);
+      }
+    }
+    return "";
+  });
+  const [percentage, setPercentage] = useState<number | null>(0);
+  const [updateTime, setUpdateTime] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPercentageLoading, setIsPercentageLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const { contract: priceFeed, isLoading: isContractLoading, error: contractError } = useContract(
+    contractAddress,
+    aggregatorV3InterfaceABI
+  );
+
+  const { data, isLoading: isContractReadLoading, error: contractReadError } = useContractRead(
+    priceFeed,
+    "latestRoundData"
+  );
+
+  const calculateChange = async (data: any) => {
+    const phaseId = BigInt(data.roundId) >> BigInt(64);
+    const aggregatorRoundId = BigInt(data.roundId) & BigInt("0xFFFFFFFFFFFFFFFF");
+
+    setIsPercentageLoading(true);
+    const percentage = await Get24HourPriceChangePercentage(priceFeed, phaseId, aggregatorRoundId);
+    setPercentage(percentage);
+    setIsPercentageLoading(false);
+  };
+
+  useEffect(() => {
+    if (data) {
+      let newPrice = ethers.utils.formatUnits(data.answer, 8);
+
+      if (newPrice !== prevPrice) {
+        setPrice(newPrice);
+        setUpdateTime(toDate(data.updatedAt).toString());
+        calculateChange(data);
+        setPrevPrice(newPrice);
         if (typeof window !== "undefined") {
-            const prevPrice = localStorage.getItem("prevPrice");
-            if (prevPrice) {
-                return parseFloat(prevPrice);
-            }
+          console.log("setting local storage");
+          localStorage.setItem("prevPrice", newPrice);
         }
-        return "";
-    });
-    const [percentage, setPercentage] = useState<number | null>(0);
-    const [updateTime, setUpdateTime] = useState<string>("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [isPercentageLoading, setIsPercentageLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
-
-    const {
-        contract: priceFeed,
-        isLoading: isContractLoading,
-        error: contractError,
-    } = useContract(contractAddress, aggregatorV3InterfaceABI);
-
-    const {
-        data,
-        isLoading: isContractReadLoading,
-        error: contractReadError,
-    } = useContractRead(priceFeed, "latestRoundData");
-
-    const calculateChange = async (data: any) => {
-        const phaseId = BigInt(data.roundId) >> BigInt(64);
-        const aggregatorRoundId = BigInt(data.roundId) & BigInt("0xFFFFFFFFFFFFFFFF");
-
-        setIsPercentageLoading(true);
-        const percentage = await Get24HourPriceChangePercentage(priceFeed, phaseId, aggregatorRoundId);
-        setPercentage(percentage);
+      } else {
+        // if prices are same, still set loading states to false
         setIsPercentageLoading(false);
-    };
+      }
+    }
 
-    useEffect(() => {
-        if (data) {
-            let newPrice = ethers.utils.formatUnits(data.answer, 8);
+    // sets loading state to true if either is loading
+    setIsLoading(isContractLoading || isContractReadLoading);
 
-            if (newPrice !== prevPrice) {
-                setPrice(newPrice);
-                setUpdateTime(toDate(data.updatedAt).toString());
-                console.log("running calculate change");
-                calculateChange(data);
-                setPrevPrice(newPrice);
-                if (typeof window !== "undefined") {
-                    console.log("setting local storage");
-                    localStorage.setItem("prevPrice", newPrice);
-                }
-            } else {
-                // if prices are same, still set loading states to false
-                setIsPercentageLoading(false);
-            }
-        }
+    // sets loading state to false if both are not loading
+    if (!isContractLoading && !isContractReadLoading) {
+      setIsLoading(false);
+    }
 
-        // sets loading state to true if either is loading
-        setIsLoading(isContractLoading || isContractReadLoading);
+    setError(
+      contractError instanceof Error ? contractError : contractReadError instanceof Error ? contractReadError : null
+    );
+  }, [data, isContractLoading, isContractReadLoading, contractError, contractReadError]);
 
-        // sets loading state to false if both are not loading
-        if (!isContractLoading && !isContractReadLoading) {
-            setIsLoading(false);
-        }
-
-        setError(
-            contractError instanceof Error
-                ? contractError
-                : contractReadError instanceof Error
-                ? contractReadError
-                : null
-        );
-    }, [data, isContractLoading, isContractReadLoading, contractError, contractReadError]);
-
-    return { price, percentage, updateTime, isLoading, isPercentageLoading, error };
+  return { price, percentage, updateTime, isLoading, isPercentageLoading, error };
 };
