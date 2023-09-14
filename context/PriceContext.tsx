@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
 import { DataFeed, RawDataFeed } from "@/utils/Types/PriceFeedTypes";
 
 interface PriceContextData {
@@ -29,9 +29,9 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [selectedRow, setSelectedRow] = useState<string>("");
   const [coinPriceFeeds, setCoinPriceFeeds] = useState<{ [name: string]: DataFeed }>({});
   const [fiatPriceFeeds, setFiatPriceFeeds] = useState<{ [name: string]: DataFeed }>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isPercentageLoading, setIsPercentageLoading] = useState<boolean>(false);
-  const [isInitialData, setIsInitialData] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isPercentageLoading, setIsPercentageLoading] = useState<boolean>(true);
+  const hasCalculatedPercentage = useRef(false);
 
   const calculatePercentage = (coinPriceFeeds: { [name: string]: DataFeed }) => {
     const priceFeedsWithPercentage: { [key: string]: DataFeed } = {};
@@ -89,9 +89,6 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const fetchData = async () => {
-    setIsLoading(true);
-    setIsPercentageLoading(true);
-
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_URL + "/api/theGraph");
       const data = await response.json();
@@ -111,7 +108,7 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         });
 
         setCoinPriceFeeds(coinPriceFeeds);
-        setIsInitialData(false);
+        hasCalculatedPercentage.current = false;
         setFiatPriceFeeds(fiatPriceFeeds);
       }
     } catch (error) {
@@ -121,12 +118,13 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   useEffect(() => {
-    if (!isInitialData) {
+    if (!hasCalculatedPercentage.current) {
       const priceFeedsWithPercentage = calculatePercentage(coinPriceFeeds);
       setCoinPriceFeeds(priceFeedsWithPercentage);
+      hasCalculatedPercentage.current = true;
       setIsPercentageLoading(false);
     }
-  }, [coinPriceFeeds, isInitialData]);
+  }, [coinPriceFeeds]);
 
   useEffect(() => {
     fetchData();

@@ -31,8 +31,12 @@ const ChartComponent = ({ data }: ChartComponentProps) => {
   return (
     <>
       {data.length > 0 ? (
-        <Sparklines data={dataValues} svgWidth={windowWidth * 0.14} svgHeight={45}>
-          <SparklinesLine color={chartColor} style={{ animation: "colorfade 5s" }} />
+        <Sparklines
+          data={dataValues}
+          svgWidth={windowWidth >= 1024 ? windowWidth * 0.13 : windowWidth * 0.16}
+          svgHeight={45}
+        >
+          <SparklinesLine color={chartColor} />
         </Sparklines>
       ) : (
         <ScaleLoader height={25} width={2} loading={true} color={COLORS.loader} />
