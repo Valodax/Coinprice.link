@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 import { DataFeed } from "@/utils/Types/PriceFeedTypes";
 import { PriceContext } from "@/context/PriceContext";
 import { formatPrice } from "@/utils/HelperFunctions/FormatPrice";
@@ -11,33 +11,30 @@ import ChartComponent from "@/components/ChartComponent";
 
 export default function PriceTableData() {
   const { coinPriceFeeds, setSelectedRow, selectedRow, isLoading, isPercentageLoading } = useContext(PriceContext);
-  const [imgSuffixes, setImgSuffixes] = useState<Record<string, string>>({});
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    // only run this code on the client-side
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth);
+
+      const handleWindowResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleWindowResize);
+
+      // Cleanup function
+      return () => window.removeEventListener("resize", handleWindowResize);
+    }
+  }, []);
 
   const handleRowClick = (symbol: string) => {
     setSelectedRow(selectedRow === symbol ? "" : symbol);
   };
 
-  const handleError = (asset: string) => {
-    // If the suffix is already '.avif', don't set it again
-    if (imgSuffixes[asset] !== ".avif") {
-      setImgSuffixes((prevState) => ({ ...prevState, [asset]: ".avif" }));
-    }
-  };
-
   const getData = (priceFeed: DataFeed) => {
     let pricesCopy = [...priceFeed.prices];
-
-    // for (let i = 0; i < pricesCopy.length - 1; i++) {
-    //   if (pricesCopy[i].blockTimestamp === pricesCopy[i + 1].blockTimestamp) {
-    //     if (parseInt(pricesCopy[i].roundId) > parseInt(pricesCopy[i + 1].roundId)) {
-    //       pricesCopy[i].blockTimestamp = (parseInt(pricesCopy[i].blockTimestamp) + 1).toString();
-    //     } else {
-    //       pricesCopy[i + 1].blockTimestamp = (parseInt(pricesCopy[i + 1].blockTimestamp) + 1).toString();
-    //     }
-    //   }
-    // }
-    // // Sort the data by the timestamp in ascending order
-    // pricesCopy.sort((a, b) => parseInt(a.blockTimestamp) - parseInt(b.blockTimestamp));
 
     const data = pricesCopy.map((priceData) => {
       return {
@@ -60,22 +57,10 @@ export default function PriceTableData() {
             <div className="flex items-center justify-center mt-4">
               <div className="flex justify-start w-3/12 md:w-2/12 lg:w-1/12 items-center gap-x-7">
                 <div className="lg:hidden rounded-full overflow-hidden">
-                  <Image
-                    src={`/icons/${priceFeed.asset.toLowerCase()}${imgSuffixes[priceFeed.asset] || ".svg"}`}
-                    alt={symbol}
-                    width={25}
-                    height={25}
-                    onError={() => handleError(priceFeed.asset)}
-                  />
+                  <Image src={`/icons/${priceFeed.asset.toLowerCase()}.svg`} alt={symbol} width={25} height={25} />
                 </div>
                 <div className="hidden lg:block rounded-full overflow-hidden">
-                  <Image
-                    src={`/icons/${priceFeed.asset.toLowerCase()}${imgSuffixes[priceFeed.asset] || ".svg"}`}
-                    alt={symbol}
-                    width={30}
-                    height={30}
-                    onError={() => handleError(priceFeed.asset)}
-                  />
+                  <Image src={`/icons/${priceFeed.asset.toLowerCase()}.svg`} alt={symbol} width={30} height={30} />
                 </div>
 
                 <button
@@ -155,9 +140,9 @@ export default function PriceTableData() {
               <div className="flex justify-end w-3/12 lg:w-2/12">
                 {isPercentageLoading ? (
                   <ScaleLoader height={25} width={2} loading={true} color={"rgb(125 211 252)"} />
-                ) : (
-                  <ChartComponent data={getData(priceFeed)} />
-                )}
+                ) : windowWidth !== null ? (
+                  <ChartComponent data={getData(priceFeed)} windowWidth={windowWidth} />
+                ) : null}
               </div>
             </div>
             {selectedRow === symbol && <DetailedInfo />}

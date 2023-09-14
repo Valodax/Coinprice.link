@@ -1,5 +1,5 @@
 const timeFilter = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60;
-console.log(timeFilter);
+console.log("timeFilter", timeFilter);
 
 export const recentlyUpdated = `
 {

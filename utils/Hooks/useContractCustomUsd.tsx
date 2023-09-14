@@ -35,7 +35,6 @@ export const useContractCustomUsd = (contractAddress: string) => {
   const calculateChange = async (data: any) => {
     const phaseId = BigInt(data.roundId) >> BigInt(64);
     const aggregatorRoundId = BigInt(data.roundId) & BigInt("0xFFFFFFFFFFFFFFFF");
-
     setIsPercentageLoading(true);
     const percentage = await Get24HourPriceChangePercentage(priceFeed, phaseId, aggregatorRoundId);
     setPercentage(percentage);
@@ -52,7 +51,6 @@ export const useContractCustomUsd = (contractAddress: string) => {
         calculateChange(data);
         setPrevPrice(newPrice);
         if (typeof window !== "undefined") {
-          console.log("setting local storage");
           localStorage.setItem("prevPrice", newPrice);
         }
       } else {
