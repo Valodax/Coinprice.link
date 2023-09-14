@@ -60,8 +60,8 @@ export default function PriceTableData() {
                   onClick={handleRowClick.bind(null, symbol)}
                   className="flex justify-start w-3/12 hover:text-sky-500 transition-colors duration-500 md:text-lg lg:text-xl"
                 >
-                  <div className="flex gap-3 lg:gap-5 items-baseline">
-                    <span className="font-semibold text-md md:text-lg lg:text-xl">{symbol.split("/")[0]}</span>
+                  <div className="flex items-baseline font-semibold text-md md:text-lg lg:text-xl">
+                    <span>{symbol.split("/")[0]}</span>
                   </div>
                 </button>
               </div>

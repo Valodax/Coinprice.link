@@ -3,34 +3,60 @@
 @tailwind utilities;
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-    overflow-y: scroll; /* Show scrollbar even if no scrolling is needed */
-    padding-right: calc(100vw - 100%); /* Place to "hide" the body scrollbar */
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  overflow-y: scroll; /* Show scrollbar even if no scrolling is needed */
+  padding-right: calc(100vw - 100%); /* Place to "hide" the body scrollbar */
 }
 
 ::-webkit-scrollbar {
-    width: 10px; /* width of the entire scrollbar */
+  width: 10px; /* width of the entire scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-    background: #000000; /* color of the tracking area */
+  background: #000000; /* color of the tracking area */
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #888888; /* color of the scroll thumb */
-    border-radius: 20px; /* roundness of the scroll thumb */
-    border: 3px solid #000000; /* creates padding around scroll thumb */
+  background-color: #888888; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid #000000; /* creates padding around scroll thumb */
+}
+
+@keyframes colorfade-green {
+  0% {
+    stroke: rgb(125 211 252);
+  }
+  100% {
+    stroke: rgb(74 222 128);
+  }
+}
+
+@keyframes colorfade-red {
+  0% {
+    stroke: rgb(125 211 252);
+  }
+  100% {
+    stroke: rgb(248 113 113);
+  }
+}
+
+.colorfade-green {
+  animation: colorfade-green 5s;
+}
+
+.colorfade-red {
+  animation: colorfade-red 5s;
 }
 
 .text-transition-color {
-    transition: color 3s linear;
+  transition: color 3s linear;
 }

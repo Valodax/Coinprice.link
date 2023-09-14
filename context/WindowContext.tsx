@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 // Create context with null initial value and make sure to specify the type
-const WindowWidthContext = createContext<number | null>(null);
+const WindowWidthContext = createContext<number>(0);
 
 interface WindowWidthProviderProps {
   children: ReactNode;
@@ -27,4 +27,4 @@ export const WindowWidthProvider: React.FC<WindowWidthProviderProps> = ({ childr
 };
 
 // Create custom hook to use this context
-export const useWindowWidth = (): number | null => useContext(WindowWidthContext);
+export const useWindowWidth = (): number => useContext(WindowWidthContext);
