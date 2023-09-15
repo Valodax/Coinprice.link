@@ -2,10 +2,14 @@
 import { useContext } from "react";
 import { PriceContext } from "@/context/PriceContext";
 
-export default function DetailedInfo() {
-  const { selectedRow, coinPriceFeeds } = useContext(PriceContext);
+interface Props {
+  isFiat?: boolean;
+}
 
-  const selectedPriceFeed = coinPriceFeeds[selectedRow];
+export default function DetailedInfo({ isFiat }: Props) {
+  const { selectedRow, coinPriceFeeds, fiatPriceFeeds } = useContext(PriceContext);
+
+  const selectedPriceFeed = isFiat ? fiatPriceFeeds[selectedRow] : coinPriceFeeds[selectedRow];
 
   return (
     <div className="flex flex-col items-center justify-center">

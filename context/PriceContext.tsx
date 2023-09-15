@@ -32,15 +32,14 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isPercentageLoading, setIsPercentageLoading] = useState<boolean>(true);
   const hasCalculatedPercentage = useRef(false);
-  const [isSending, setIsSending] = useState<boolean>(true);
 
-  const calculatePercentage = (coinPriceFeeds: { [name: string]: DataFeed }) => {
+  const calculatePercentage = (priceFeeds: { [name: string]: DataFeed }) => {
     const priceFeedsWithPercentage: { [key: string]: DataFeed } = {};
     const now = Math.floor(Date.now() / 1000);
     const oneDayAgo = now - 24 * 60 * 60;
     const oneWeekAgo = now - 7 * 24 * 60 * 60;
 
-    Object.entries(coinPriceFeeds).forEach(([symbol, priceFeed]) => {
+    Object.entries(priceFeeds).forEach(([symbol, priceFeed]) => {
       const prices24hAgo = priceFeed.prices.filter((price) => parseInt(price.blockTimestamp) >= oneDayAgo);
       const prices7dAgo = priceFeed.prices.filter((price) => parseInt(price.blockTimestamp) >= oneWeekAgo);
 
@@ -100,7 +99,7 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
         data.data.dataFeeds.forEach((feed: RawDataFeed) => {
           if (feed.prices.length > 0) {
-            if (feed.assetAddress.startsWith("0x00000")) {
+            if (feed.assetAddress.startsWith("0x0000000000000000000")) {
               fiatPriceFeeds[feed.name] = createFeedObject(feed);
             } else {
               coinPriceFeeds[feed.name] = createFeedObject(feed);
@@ -119,13 +118,22 @@ export const PriceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   useEffect(() => {
+    // Check if either coinPriceFeeds or fiatPriceFeeds is not set
+    if (Object.keys(coinPriceFeeds).length === 0 || Object.keys(fiatPriceFeeds).length === 0) {
+      return;
+    }
+
     if (!hasCalculatedPercentage.current) {
-      const priceFeedsWithPercentage = calculatePercentage(coinPriceFeeds);
-      setCoinPriceFeeds(priceFeedsWithPercentage);
+      const coinPriceFeedsWithPercentage = calculatePercentage(coinPriceFeeds);
+      setCoinPriceFeeds(coinPriceFeedsWithPercentage);
+
+      const fiatPriceFeedsWithPercentage = calculatePercentage(fiatPriceFeeds);
+      setFiatPriceFeeds(fiatPriceFeedsWithPercentage);
+
       hasCalculatedPercentage.current = true;
       setIsPercentageLoading(false);
     }
-  }, [coinPriceFeeds]);
+  }, [coinPriceFeeds, fiatPriceFeeds]);
 
   useEffect(() => {
     fetchData();

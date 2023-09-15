@@ -16,8 +16,8 @@ export default function Hero() {
           {!isLoading && price ? (
             `$${formatPrice((parseFloat(price) / 1000000000000).toString(), 2)}T`
           ) : (
-            <div className="pt-0.5">
-              <ScaleLoader height={15} width={2} loading={true} color={"rgb(125 211 252)"} />
+            <div className="flex justify-end items-bottom">
+              <ScaleLoader height={20} width={2} loading={true} color={"rgb(125 211 252)"} />
             </div>
           )}
         </span>

@@ -7,7 +7,11 @@ import { BarLoader } from "react-spinners";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-export default function PriceTable() {
+interface Props {
+  isFiat?: boolean;
+}
+
+export default function PriceTable({ isFiat }: Props) {
   const { isLoading } = useContext(PriceContext);
   const windowWidth = useWindowWidth();
   const [showSecondLoader, setShowSecondLoader] = useState(false);
@@ -48,7 +52,7 @@ export default function PriceTable() {
         <>
           <div className="flex items-center justify-center">
             <div className="flex items-center justify-start w-3/12 md:w-2/12 lg:w-2/12 text-sm md:text-lg lg:text-xl">
-              Coin Identifier
+              {!isFiat ? "Coin Identifier" : "Fiat Currency"}
             </div>
             <div className="flex items-center justify-end w-3/12 lg:w-2/12 text-sm md:text-lg lg:text-xl">
               Price (USD)
@@ -59,7 +63,7 @@ export default function PriceTable() {
               Last 7 Days
             </div>
           </div>
-          <PriceTableData />
+          <PriceTableData isFiat={isFiat} />
         </>
       )}
     </div>

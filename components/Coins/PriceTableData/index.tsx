@@ -9,8 +9,14 @@ import Image from "next/image";
 import DetailedInfo from "@/components/Coins/DetailedInfo";
 import ChartComponent from "@/components/ChartComponent";
 
-export default function PriceTableData() {
-  const { coinPriceFeeds, setSelectedRow, selectedRow, isLoading, isPercentageLoading } = useContext(PriceContext);
+interface Props {
+  isFiat?: boolean;
+}
+
+export default function PriceTableData({ isFiat }: Props) {
+  const { coinPriceFeeds, fiatPriceFeeds, setSelectedRow, selectedRow, isLoading, isPercentageLoading } = useContext(
+    PriceContext
+  );
 
   const handleRowClick = (symbol: string) => {
     setSelectedRow(selectedRow === symbol ? "" : symbol);
@@ -30,20 +36,38 @@ export default function PriceTableData() {
 
   return (
     <div>
-      {Object.entries(coinPriceFeeds).map(([symbol, priceFeed]) => (
+      {Object.entries(isFiat ? fiatPriceFeeds : coinPriceFeeds).map(([symbol, priceFeed]) => (
         <div key={symbol}>
           <div className="flex items-center justify-center mt-4">
             <div className="flex justify-start w-3/12 md:w-2/12 lg:w-1/12 items-center gap-x-7">
               <div className="lg:hidden rounded-full overflow-hidden">
-                <Image src={`/icons/coins/${priceFeed.asset.toLowerCase()}.svg`} alt={symbol} width={25} height={25} />
+                <Image
+                  src={
+                    isFiat
+                      ? `/icons/fiat/square/${priceFeed.asset.toLowerCase()}.svg`
+                      : `/icons/coins/${priceFeed.asset.toLowerCase()}.svg`
+                  }
+                  alt={symbol}
+                  width={25}
+                  height={25}
+                />
               </div>
               <div className="hidden lg:block rounded-full overflow-hidden">
-                <Image src={`/icons/coins/${priceFeed.asset.toLowerCase()}.svg`} alt={symbol} width={30} height={30} />
+                <Image
+                  src={
+                    isFiat
+                      ? `/icons/fiat/square/${priceFeed.asset.toLowerCase()}.svg`
+                      : `/icons/coins/${priceFeed.asset.toLowerCase()}.svg`
+                  }
+                  alt={symbol}
+                  width={30}
+                  height={30}
+                />
               </div>
 
               <button
                 onClick={handleRowClick.bind(null, symbol)}
-                className="flex justify-start w-3/12 hover:text-sky-500 transition-colors duration-500 md:text-lg lg:text-xl"
+                className="flex justify-start w-3/12 hover:text-sky-500 md:text-lg lg:text-xl"
               >
                 <div className="flex items-baseline font-semibold text-md md:text-lg lg:text-xl">
                   <span>{symbol.split("/")[0]}</span>
@@ -55,9 +79,9 @@ export default function PriceTableData() {
                 priceFeed && !isPercentageLoading
                   ? priceFeed.percentage24h
                     ? priceFeed.percentage24h < 0
-                      ? "text-red-400 transition-colors duration-[5000ms]"
+                      ? "text-red-400"
                       : priceFeed.percentage24h > 0
-                      ? "text-green-400 transition-colors duration-[5000ms]"
+                      ? "text-green-400"
                       : "text-sky-300"
                     : "text-sky-300"
                   : "text-sky-300"
@@ -78,9 +102,9 @@ export default function PriceTableData() {
                 priceFeed && !isPercentageLoading
                   ? priceFeed.percentage24h
                     ? priceFeed.percentage24h < 0
-                      ? "text-red-400 transition-colors duration-[5000ms]"
+                      ? "text-red-400"
                       : priceFeed.percentage24h > 0
-                      ? "text-green-400 transition-colors duration-[5000ms]"
+                      ? "text-green-400"
                       : "text-sky-300"
                     : "text-sky-300"
                   : "text-sky-300"
@@ -99,9 +123,9 @@ export default function PriceTableData() {
                 priceFeed && !isPercentageLoading
                   ? priceFeed.percentage7d
                     ? priceFeed.percentage7d < 0
-                      ? "text-red-400 transition-colors duration-[5000ms]"
+                      ? "text-red-400"
                       : priceFeed.percentage7d > 0
-                      ? "text-green-400 transition-colors duration-[5000ms]"
+                      ? "text-green-400"
                       : "text-sky-300"
                     : "text-sky-300"
                   : "text-sky-300"
@@ -123,7 +147,7 @@ export default function PriceTableData() {
               )}
             </div>
           </div>
-          {selectedRow === symbol && <DetailedInfo />}
+          {selectedRow === symbol && <DetailedInfo isFiat={isFiat} />}
         </div>
       ))}
     </div>
