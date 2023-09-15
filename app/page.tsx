@@ -1,4 +1,4 @@
-import PriceTable from "@/components/Coins/PriceTable";
+import PriceTable from "@/components/Prices/PriceTableHeader";
 
 export default function Home() {
   return (

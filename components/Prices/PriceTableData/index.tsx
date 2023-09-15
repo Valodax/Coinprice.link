@@ -6,8 +6,8 @@ import { formatPrice } from "@/utils/HelperFunctions/FormatPrice";
 import { ScaleLoader } from "react-spinners";
 import { currentPrice } from "@/utils/HelperFunctions/CurrentPrice";
 import Image from "next/image";
-import DetailedInfo from "@/components/Coins/DetailedInfo";
-import ChartComponent from "@/components/ChartComponent";
+import DetailedInfo from "@/components/Prices/DetailedInfo";
+import SparklineChart from "@/components/SparklineChart";
 
 interface Props {
   isFiat?: boolean;
@@ -143,7 +143,7 @@ export default function PriceTableData({ isFiat }: Props) {
               {isPercentageLoading ? (
                 <ScaleLoader height={25} width={2} loading={true} color={"rgb(125 211 252)"} />
               ) : (
-                <ChartComponent data={getData(priceFeed)} />
+                <SparklineChart data={getData(priceFeed)} />
               )}
             </div>
           </div>

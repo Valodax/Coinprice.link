@@ -11,15 +11,16 @@ export const links = [
 
 export const legal = [
   {
-    name: "Privacy Policy",
-    href: "/legal/privacy",
+    name: "Subgraph",
+    href:
+      "https://thegraph.com/explorer/subgraphs/Fi4Vo18y9yZLVdCttcSie1yeKrUaTTQb5Ndz64ZnYvU9?view=Overview&chain=mainnet",
   },
   {
-    name: "Terms of Service",
-    href: "/legal/service",
+    name: "GitHub",
+    href: "https://github.com/mitchhs12/Coinprice.link",
   },
   {
-    name: "Terms of Sale",
-    href: "/legal/sale",
+    name: "Twitter",
+    href: "https://twitter.com/mitchhs12",
   },
 ];

@@ -1,5 +1,5 @@
 "use client";
-import PriceTableData from "@/components/Coins/PriceTableData";
+import PriceTableData from "@/components/Prices/PriceTableData";
 import { useContext } from "react";
 import { PriceContext } from "@/context/PriceContext";
 import { useWindowWidth } from "@/context/WindowContext";
