@@ -1,5 +1,4 @@
 import PriceTable from "@/components/Prices/PriceTableHeader";
-
 export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">

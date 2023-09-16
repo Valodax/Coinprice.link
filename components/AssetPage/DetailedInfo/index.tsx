@@ -1,15 +1,17 @@
 "use client";
 import { useContext } from "react";
 import { PriceContext } from "@/context/PriceContext";
+import { AssetContext } from "@/context/AssetContext";
 
 interface Props {
   isFiat?: boolean;
 }
 
 export default function DetailedInfo({ isFiat }: Props) {
-  const { selectedRow, coinPriceFeeds, fiatPriceFeeds } = useContext(PriceContext);
+  const { coinPriceFeeds, fiatPriceFeeds } = useContext(PriceContext);
+  const { selectedAsset } = useContext(AssetContext);
 
-  const selectedPriceFeed = isFiat ? fiatPriceFeeds[selectedRow] : coinPriceFeeds[selectedRow];
+  const selectedPriceFeed = isFiat ? fiatPriceFeeds[selectedAsset] : coinPriceFeeds[selectedAsset];
 
   return (
     <div className="flex flex-col items-center justify-center">

@@ -64,7 +64,7 @@ export const usdOnlyWithHistorical = `
 }
 `;
 
-export const query = `
+export const latestPrice = `
 {
   dataFeeds(
     where: {live: true}
@@ -79,6 +79,27 @@ export const query = `
       price
       roundId
       blockTimestamp
+    }
+  }
+}
+`;
+
+export const assetSpecificWithHistorical = `
+{
+  dataFeeds(where: {asset: "{asset}", denomination: "USD"}) {
+    id
+    phaseId
+    live
+    prices(
+      orderBy: roundId
+      orderDirection: asc
+      where: {blockTimestamp_gte: "{timeFilter}"}
+    ) {
+      id
+      price
+      roundId
+      blockTimestamp
+      blockNumber
     }
   }
 }

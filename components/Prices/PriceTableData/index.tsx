@@ -6,21 +6,15 @@ import { formatPrice } from "@/utils/HelperFunctions/FormatPrice";
 import { ScaleLoader } from "react-spinners";
 import { currentPrice } from "@/utils/HelperFunctions/CurrentPrice";
 import Image from "next/image";
-import DetailedInfo from "@/components/Prices/DetailedInfo";
 import SparklineChart from "@/components/SparklineChart";
+import Link from "next/link";
 
 interface Props {
   isFiat?: boolean;
 }
 
 export default function PriceTableData({ isFiat }: Props) {
-  const { coinPriceFeeds, fiatPriceFeeds, setSelectedRow, selectedRow, isLoading, isPercentageLoading } = useContext(
-    PriceContext
-  );
-
-  const handleRowClick = (symbol: string) => {
-    setSelectedRow(selectedRow === symbol ? "" : symbol);
-  };
+  const { coinPriceFeeds, fiatPriceFeeds, isLoading, isPercentageLoading } = useContext(PriceContext);
 
   const getData = (priceFeed: DataFeed) => {
     let pricesCopy = [...priceFeed.prices];
@@ -65,14 +59,13 @@ export default function PriceTableData({ isFiat }: Props) {
                 />
               </div>
 
-              <button
-                onClick={handleRowClick.bind(null, symbol)}
-                className="flex justify-start w-3/12 hover:text-sky-500 md:text-lg lg:text-xl"
-              >
-                <div className="flex items-baseline font-semibold text-md md:text-lg lg:text-xl">
-                  <span>{symbol.split("/")[0]}</span>
-                </div>
-              </button>
+              <Link href={isFiat ? `/fiat/${priceFeed.asset.toLowerCase()}` : `/${priceFeed.asset.toLowerCase()}`}>
+                <button className="flex justify-start w-3/12 hover:text-sky-500 md:text-lg lg:text-xl">
+                  <div className="flex items-baseline font-semibold text-md md:text-lg lg:text-xl">
+                    <span>{symbol.split("/")[0]}</span>
+                  </div>
+                </button>
+              </Link>
             </div>
             <div
               className={`flex justify-end w-3/12 lg:w-3/12 font-semibold text-sm md:text-lg lg:text-xl ${
@@ -147,7 +140,6 @@ export default function PriceTableData({ isFiat }: Props) {
               )}
             </div>
           </div>
-          {selectedRow === symbol && <DetailedInfo isFiat={isFiat} />}
         </div>
       ))}
     </div>

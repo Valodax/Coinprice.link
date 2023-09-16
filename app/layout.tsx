@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <ContextProvider>
                         <Header />
                         <Hero />
-                        <main className="flex-grow pb-2">
+                        <main className="flex-grow pb-4">
                         {children}
                         </main>
                         <Footer />
