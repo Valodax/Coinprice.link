@@ -1,0 +1,16 @@
+query GetMainAllUsd($timeFilter: BigInt!) {
+  dataFeeds(where: { live: true, denomination: "USD" }, first: 300, orderBy: name, orderDirection: asc) {
+    name
+    id
+    decimals
+    asset
+    assetAddress
+    denomination
+    denominationAddress
+    prices(where: { blockTimestamp_gte: $timeFilter }, first: 500, orderBy: blockTimestamp, orderDirection: asc) {
+      price
+      roundId
+      blockTimestamp
+    }
+  }
+}

@@ -1,0 +1,13 @@
+sources:
+  - name: Chainlink
+    handler:
+      graphql:
+        endpoint: https://gateway.thegraph.com/api/{env.THE_GRAPH_API_KEY}/subgraphs/id/Fi4Vo18y9yZLVdCttcSie1yeKrUaTTQb5Ndz64ZnYvU9
+    transforms:
+      - autoPagination
+          validateSchema: true
+          limitOfRecords: 1000
+
+documents:
+  - ./graphql/GetAssetSpecific.gql
+  - ./graphql/GetMainAllUsd.gql

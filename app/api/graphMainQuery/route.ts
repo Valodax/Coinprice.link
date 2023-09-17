@@ -1,16 +1,5 @@
 import { NextResponse } from "next/server";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { usdOnlyWithHistorical } from "@/utils/TheGraphQueries";
-
-const url = `https://gateway.thegraph.com/api/${process.env.THE_GRAPH_API_KEY}/subgraphs/id/Fi4Vo18y9yZLVdCttcSie1yeKrUaTTQb5Ndz64ZnYvU9`;
-
-interface ApolloResult {
-  data: {
-    dataFeeds: RawDataFeed[];
-  };
-  loading: boolean;
-  networkStatus: number;
-}
+import { GetMainAllUsdDocument, GetMainAllUsdQuery, execute } from "@/.graphclient";
 
 interface Price {
   price: string;
@@ -30,15 +19,8 @@ interface RawDataFeed {
 }
 
 export const GET = async (req: Request) => {
-  const client = new ApolloClient({
-    uri: url,
-    cache: new InMemoryCache(),
-  });
-
   try {
-    const data: ApolloResult = await client.query({
-      query: gql(usdOnlyWithHistorical),
-    });
+    const data = await execute(GetMainAllUsdDocument, { timeFilter: Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60 });
 
     return new NextResponse(JSON.stringify(data), { status: 200 });
   } catch (error) {

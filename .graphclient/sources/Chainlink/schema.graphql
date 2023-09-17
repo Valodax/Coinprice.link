@@ -1,0 +1,463 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+
+"Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive."
+directive @entity on OBJECT
+
+"Defined a Subgraph ID for an object type"
+directive @subgraphId(id: String!) on OBJECT
+
+"creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API."
+directive @derivedFrom(field: String!) on FIELD_DEFINITION
+
+scalar BigDecimal
+
+scalar BigInt
+
+input BlockChangedFilter {
+  number_gte: Int!
+}
+
+input Block_height {
+  hash: Bytes
+  number: Int
+  number_gte: Int
+}
+
+scalar Bytes
+
+type DataFeed {
+  id: Bytes!
+  name: String
+  asset: String
+  assetAddress: Bytes!
+  denomination: String
+  denominationAddress: Bytes!
+  decimals: Int
+  live: Boolean!
+  phaseId: Int!
+  timeCreated: BigInt!
+  timeLastPrice: BigInt
+  timeDeprecated: BigInt
+  prices(skip: Int = 0, first: Int = 100, orderBy: DataPoint_orderBy, orderDirection: OrderDirection, where: DataPoint_filter): [DataPoint!]
+}
+
+input DataFeed_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
+  asset: String
+  asset_not: String
+  asset_gt: String
+  asset_lt: String
+  asset_gte: String
+  asset_lte: String
+  asset_in: [String!]
+  asset_not_in: [String!]
+  asset_contains: String
+  asset_contains_nocase: String
+  asset_not_contains: String
+  asset_not_contains_nocase: String
+  asset_starts_with: String
+  asset_starts_with_nocase: String
+  asset_not_starts_with: String
+  asset_not_starts_with_nocase: String
+  asset_ends_with: String
+  asset_ends_with_nocase: String
+  asset_not_ends_with: String
+  asset_not_ends_with_nocase: String
+  assetAddress: Bytes
+  assetAddress_not: Bytes
+  assetAddress_gt: Bytes
+  assetAddress_lt: Bytes
+  assetAddress_gte: Bytes
+  assetAddress_lte: Bytes
+  assetAddress_in: [Bytes!]
+  assetAddress_not_in: [Bytes!]
+  assetAddress_contains: Bytes
+  assetAddress_not_contains: Bytes
+  denomination: String
+  denomination_not: String
+  denomination_gt: String
+  denomination_lt: String
+  denomination_gte: String
+  denomination_lte: String
+  denomination_in: [String!]
+  denomination_not_in: [String!]
+  denomination_contains: String
+  denomination_contains_nocase: String
+  denomination_not_contains: String
+  denomination_not_contains_nocase: String
+  denomination_starts_with: String
+  denomination_starts_with_nocase: String
+  denomination_not_starts_with: String
+  denomination_not_starts_with_nocase: String
+  denomination_ends_with: String
+  denomination_ends_with_nocase: String
+  denomination_not_ends_with: String
+  denomination_not_ends_with_nocase: String
+  denominationAddress: Bytes
+  denominationAddress_not: Bytes
+  denominationAddress_gt: Bytes
+  denominationAddress_lt: Bytes
+  denominationAddress_gte: Bytes
+  denominationAddress_lte: Bytes
+  denominationAddress_in: [Bytes!]
+  denominationAddress_not_in: [Bytes!]
+  denominationAddress_contains: Bytes
+  denominationAddress_not_contains: Bytes
+  decimals: Int
+  decimals_not: Int
+  decimals_gt: Int
+  decimals_lt: Int
+  decimals_gte: Int
+  decimals_lte: Int
+  decimals_in: [Int!]
+  decimals_not_in: [Int!]
+  live: Boolean
+  live_not: Boolean
+  live_in: [Boolean!]
+  live_not_in: [Boolean!]
+  phaseId: Int
+  phaseId_not: Int
+  phaseId_gt: Int
+  phaseId_lt: Int
+  phaseId_gte: Int
+  phaseId_lte: Int
+  phaseId_in: [Int!]
+  phaseId_not_in: [Int!]
+  timeCreated: BigInt
+  timeCreated_not: BigInt
+  timeCreated_gt: BigInt
+  timeCreated_lt: BigInt
+  timeCreated_gte: BigInt
+  timeCreated_lte: BigInt
+  timeCreated_in: [BigInt!]
+  timeCreated_not_in: [BigInt!]
+  timeLastPrice: BigInt
+  timeLastPrice_not: BigInt
+  timeLastPrice_gt: BigInt
+  timeLastPrice_lt: BigInt
+  timeLastPrice_gte: BigInt
+  timeLastPrice_lte: BigInt
+  timeLastPrice_in: [BigInt!]
+  timeLastPrice_not_in: [BigInt!]
+  timeDeprecated: BigInt
+  timeDeprecated_not: BigInt
+  timeDeprecated_gt: BigInt
+  timeDeprecated_lt: BigInt
+  timeDeprecated_gte: BigInt
+  timeDeprecated_lte: BigInt
+  timeDeprecated_in: [BigInt!]
+  timeDeprecated_not_in: [BigInt!]
+  prices_: DataPoint_filter
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [DataFeed_filter]
+  or: [DataFeed_filter]
+}
+
+enum DataFeed_orderBy {
+  id
+  name
+  asset
+  assetAddress
+  denomination
+  denominationAddress
+  decimals
+  live
+  phaseId
+  timeCreated
+  timeLastPrice
+  timeDeprecated
+  prices
+}
+
+type DataPoint {
+  id: Bytes!
+  feed: DataFeed!
+  price: BigInt!
+  roundId: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+}
+
+input DataPoint_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  feed: String
+  feed_not: String
+  feed_gt: String
+  feed_lt: String
+  feed_gte: String
+  feed_lte: String
+  feed_in: [String!]
+  feed_not_in: [String!]
+  feed_contains: String
+  feed_contains_nocase: String
+  feed_not_contains: String
+  feed_not_contains_nocase: String
+  feed_starts_with: String
+  feed_starts_with_nocase: String
+  feed_not_starts_with: String
+  feed_not_starts_with_nocase: String
+  feed_ends_with: String
+  feed_ends_with_nocase: String
+  feed_not_ends_with: String
+  feed_not_ends_with_nocase: String
+  feed_: DataFeed_filter
+  price: BigInt
+  price_not: BigInt
+  price_gt: BigInt
+  price_lt: BigInt
+  price_gte: BigInt
+  price_lte: BigInt
+  price_in: [BigInt!]
+  price_not_in: [BigInt!]
+  roundId: BigInt
+  roundId_not: BigInt
+  roundId_gt: BigInt
+  roundId_lt: BigInt
+  roundId_gte: BigInt
+  roundId_lte: BigInt
+  roundId_in: [BigInt!]
+  roundId_not_in: [BigInt!]
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_lt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_not_in: [BigInt!]
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [DataPoint_filter]
+  or: [DataPoint_filter]
+}
+
+enum DataPoint_orderBy {
+  id
+  feed
+  feed__id
+  feed__name
+  feed__asset
+  feed__assetAddress
+  feed__denomination
+  feed__denominationAddress
+  feed__decimals
+  feed__live
+  feed__phaseId
+  feed__timeCreated
+  feed__timeLastPrice
+  feed__timeDeprecated
+  price
+  roundId
+  blockNumber
+  blockTimestamp
+}
+
+"""
+8 bytes signed integer
+
+"""
+scalar Int8
+
+"""Defines the order direction, either ascending or descending"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type Query {
+  dataFeed(
+    id: ID!
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): DataFeed
+  dataFeeds(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: DataFeed_orderBy
+    orderDirection: OrderDirection
+    where: DataFeed_filter
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [DataFeed!]!
+  dataPoint(
+    id: ID!
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): DataPoint
+  dataPoints(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: DataPoint_orderBy
+    orderDirection: OrderDirection
+    where: DataPoint_filter
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [DataPoint!]!
+  """Access to subgraph metadata"""
+  _meta(block: Block_height): _Meta_
+}
+
+type Subscription {
+  dataFeed(
+    id: ID!
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): DataFeed
+  dataFeeds(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: DataFeed_orderBy
+    orderDirection: OrderDirection
+    where: DataFeed_filter
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [DataFeed!]!
+  dataPoint(
+    id: ID!
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): DataPoint
+  dataPoints(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: DataPoint_orderBy
+    orderDirection: OrderDirection
+    where: DataPoint_filter
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [DataPoint!]!
+  """Access to subgraph metadata"""
+  _meta(block: Block_height): _Meta_
+}
+
+type _Block_ {
+  """The hash of the block"""
+  hash: Bytes
+  """The block number"""
+  number: Int!
+  """Integer representation of the timestamp stored in blocks for the chain"""
+  timestamp: Int
+}
+
+"""The type for the top-level _meta field"""
+type _Meta_ {
+  """
+  Information about a specific subgraph block. The hash of the block
+  will be null if the _meta field has a block constraint that asks for
+  a block number. It will be filled if the _meta field has no block constraint
+  and therefore asks for the latest  block
+  
+  """
+  block: _Block_!
+  """The deployment ID"""
+  deployment: String!
+  """If `true`, the subgraph encountered indexing errors at some past block"""
+  hasIndexingErrors: Boolean!
+}
+
+enum _SubgraphErrorPolicy_ {
+  """Data will be returned even if the subgraph has indexing errors"""
+  allow
+  """
+  If the subgraph has indexing errors, data will be omitted. The default.
+  """
+  deny
+}

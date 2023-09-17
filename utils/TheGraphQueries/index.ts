@@ -90,6 +90,7 @@ export const assetSpecificWithHistorical = `
     id
     phaseId
     live
+    decimals
     prices(
       orderBy: roundId
       orderDirection: asc

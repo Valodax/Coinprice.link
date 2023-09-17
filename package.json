@@ -19,6 +19,7 @@
     "@types/react-sparklines": "^1.7.2",
     "alchemy-sdk": "^2.9.2",
     "autoprefixer": "10.4.14",
+    "dotenv": "^16.3.1",
     "encoding": "^0.1.13",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
@@ -37,9 +38,11 @@
     "recharts": "^2.8.0",
     "request": "^2.88.2",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "undici": "5.5.1"
   },
   "devDependencies": {
+    "@graphprotocol/client-cli": "^3.0.0",
     "@svgr/webpack": "^8.0.1"
   }
 }

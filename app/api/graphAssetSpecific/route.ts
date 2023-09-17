@@ -1,32 +1,30 @@
 import { NextResponse } from "next/server";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { assetSpecificWithHistorical } from "@/utils/TheGraphQueries";
+import { GetAssetSpecificDocument, GetAssetSpecificQuery, execute } from "@/.graphclient";
 
 const url = `https://gateway.thegraph.com/api/${process.env.THE_GRAPH_API_KEY}/subgraphs/id/Fi4Vo18y9yZLVdCttcSie1yeKrUaTTQb5Ndz64ZnYvU9`;
 
 interface ApolloResult {
   data: {
-    dataFeeds: RawDataFeed[];
+    dataFeeds: PhaseRawDataFeed[];
   };
   loading: boolean;
   networkStatus: number;
 }
 
 interface Price {
-  price: string;
   blockTimestamp: string;
+  blockNumber: string;
+  id: string; // tx hash of the price update
+  price: string;
   roundId: string;
 }
 
-interface RawDataFeed {
-  name: string;
+interface PhaseRawDataFeed {
   id: string;
-  decimals: number;
+  live: boolean;
+  phaseId: number;
   prices: Price[];
-  asset: string;
-  assetAddress: string;
-  denomination: string;
-  denominationAddress: string;
+  decimals: number;
 }
 
 export const POST = async (req: Request) => {
@@ -34,16 +32,10 @@ export const POST = async (req: Request) => {
   const timeFilter = body.timeFilter;
   const asset = body.asset;
 
-  const client = new ApolloClient({
-    uri: url,
-    cache: new InMemoryCache(),
-  });
-
-  const query = assetSpecificWithHistorical.replace("{asset}", asset).replace("{timeFilter}", timeFilter.toString());
-
   try {
-    const data: ApolloResult = await client.query({
-      query: gql(query),
+    const data = await execute(GetAssetSpecificDocument, {
+      asset: asset.toUpperCase(),
+      timeFilter: timeFilter.toString(),
     });
 
     return new NextResponse(JSON.stringify(data), { status: 200 });

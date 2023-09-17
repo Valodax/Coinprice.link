@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { DataFeed, RawDataFeed } from "@/utils/Types/PriceFeedTypes";
 
 interface AssetContextData {
@@ -46,6 +46,8 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         body: JSON.stringify({ asset: selectedAsset, timeFilter: timeFilter }),
       });
       const data = await response.json();
+
+      console.log("running this code");
 
       console.log(`${selectedAsset} Response:`, data);
 
