@@ -13,6 +13,7 @@ import { fetch as fetchFn } from '@whatwg-node/fetch';
 import { MeshResolvedSource } from '@graphql-mesh/runtime';
 import { MeshTransform, MeshPlugin } from '@graphql-mesh/types';
 import GraphqlHandler from "@graphql-mesh/graphql"
+import AutoPaginationTransform from "@graphprotocol/client-auto-pagination";
 import BareMerger from "@graphql-mesh/merger-bare";
 import { printWithCache } from '@graphql-mesh/utils';
 import { createMeshHTTPHandler, MeshHTTPHandler } from '@graphql-mesh/http';
@@ -767,6 +768,15 @@ const chainlinkHandler = new GraphqlHandler({
               logger: logger.child("Chainlink"),
               importFn,
             });
+chainlinkTransforms[0] = new AutoPaginationTransform({
+                  apiName: "Chainlink",
+                  config: {"validateSchema":true,"limitOfRecords":1000},
+                  baseDir,
+                  cache,
+                  pubsub,
+                  importFn,
+                  logger,
+                });
 sources[0] = {
           name: 'Chainlink',
           handler: chainlinkHandler,
@@ -866,12 +876,13 @@ export type GetMainAllUsdQuery = { dataFeeds: Array<(
 
 export const GetAssetSpecificDocument = gql`
     query GetAssetSpecific($asset: String!, $timeFilter: BigInt!) {
-  dataFeeds(where: {asset: $asset, denomination: "USD"}) {
+  dataFeeds(first: 1000, where: {asset: $asset, denomination: "USD"}) {
     id
     phaseId
     live
     decimals
     prices(
+      first: 1000
       orderBy: roundId
       orderDirection: asc
       where: {blockTimestamp_gte: $timeFilter}

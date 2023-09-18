@@ -4,7 +4,7 @@ sources:
       graphql:
         endpoint: https://gateway.thegraph.com/api/{env.THE_GRAPH_API_KEY}/subgraphs/id/Fi4Vo18y9yZLVdCttcSie1yeKrUaTTQb5Ndz64ZnYvU9
     transforms:
-      - autoPagination
+      - autoPagination:
           validateSchema: true
           limitOfRecords: 1000
 

@@ -1,10 +1,10 @@
 query GetAssetSpecific($asset: String!, $timeFilter: BigInt!) {
-  dataFeeds(where: { asset: $asset, denomination: "USD" }) {
+  dataFeeds(first: 1000, where: { asset: $asset, denomination: "USD" }) {
     id
     phaseId
     live
     decimals
-    prices(orderBy: roundId, orderDirection: asc, where: { blockTimestamp_gte: $timeFilter }) {
+    prices(first: 1000, orderBy: roundId, orderDirection: asc, where: { blockTimestamp_gte: $timeFilter }) {
       id
       price
       roundId
