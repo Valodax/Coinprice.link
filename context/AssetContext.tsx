@@ -47,8 +47,6 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
       const data = await response.json();
 
-      console.log("running this code");
-
       console.log(`${selectedAsset} Response:`, data);
 
       if (data.data.dataFeeds) {
@@ -74,8 +72,10 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchData();
+    if (selectedAsset) {
+      setIsLoading(true);
+      fetchData();
+    }
   }, [selectedAsset]);
 
   return (

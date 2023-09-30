@@ -882,7 +882,7 @@ export const GetAssetSpecificDocument = gql`
     live
     decimals
     prices(
-      first: 1000
+      first: 2000
       orderBy: roundId
       orderDirection: asc
       where: {blockTimestamp_gte: $timeFilter}

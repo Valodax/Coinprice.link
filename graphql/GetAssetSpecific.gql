@@ -4,7 +4,7 @@ query GetAssetSpecific($asset: String!, $timeFilter: BigInt!) {
     phaseId
     live
     decimals
-    prices(first: 1000, orderBy: roundId, orderDirection: asc, where: { blockTimestamp_gte: $timeFilter }) {
+    prices(first: 2000, orderBy: roundId, orderDirection: asc, where: { blockTimestamp_gte: $timeFilter }) {
       id
       price
       roundId
