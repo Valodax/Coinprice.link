@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import ContextProvider from "@/components/ContextProvider"; // All context providers are wrapped here
+import {Analytics} from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <Hero />
                         <main className="flex-grow pb-4">
                         {children}
+                        <Analytics/>
                         </main>
                         <Footer />
                     </ContextProvider>
